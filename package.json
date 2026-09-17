@@ -1,0 +1,32 @@
+{
+  "name": "@codecogs/eqneditor-tinymce6",
+  "version": "2.1.0",
+  "description": "CodeCogs Equation Editor plugin for TinyMCE 6 and 7",
+  "keywords": [
+    "tinymce",
+    "tinymce-plugin",
+    "equation",
+    "equation-editor",
+    "latex",
+    "mathml",
+    "maths"
+  ],
+  "homepage": "https://editor.codecogs.com/docs/3-Tiny_MCE_v6.php",
+  "main": "eqneditor.js",
+  "files": [
+    "eqneditor.js",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "open-cli ./example.html"
+  },
+  "author": "CodeCogs",
+  "license": "MIT",
+  "peerDependencies": {
+    "tinymce": ">=6.0.0"
+  },
+  "devDependencies": {
+    "open-cli": "^7.1.0",
+    "tinymce": "^7.0.0"
+  }
+}

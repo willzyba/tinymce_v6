@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <!--
-  A complete, working example of TinyMCE with the CodeCogs Equation Editor plugin.
-
-  Run `npm install` in this directory first (that fetches TinyMCE into node_modules), then
-  `npm start`, or simply open this file in a browser.
-
-  The plugin fetches the Equation Editor itself from editor.codecogs.com, so this page needs a
-  network connection; nothing else has to be built.
+  TinyMCE 6/7 with the CodeCogs Equation Editor plugin (eqneditor.js in this folder), using the
+  copy of TinyMCE 7 in vendor/.
+  Replace the licence with your own fxTeX Pro licence key (fx_pk_...), from editor.codecogs.com.
 -->
 <html lang="en">
 <head>
@@ -14,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CodeCogs Equation Editor - TinyMCE example</title>
 
-    <script src="./node_modules/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="./vendor/tinymce.min.js"></script>
     <script src="./eqneditor.js"></script>
 
     <style>
@@ -31,15 +27,8 @@
             height: 420,
             license_key: 'gpl',
 
-            // Default view: the maths view, with the LaTeX markup view a toggle in the
-            // dialog - the author's last choice (a cookie) overrides this on their next visit.
-            eqneditor_show_latex: false,
-
-            // Points this dev example at the local eqneditor-v5-www dev server rather than
-            // production, so in-progress features (the new toolbar, MathView-by-default) show
-            // up here before they are live at editor.codecogs.com. Remove both for production.
-            eqneditor_script_url: 'http://localhost:8010/eqneditor.api.min.js',
-            eqneditor_css_url: 'http://localhost:8010/eqneditor.css'
+            eqneditor_server: '{{EQN_SERVER}}',
+            eqneditor_licence: '{{FXTEXPRO_KEY}}'
         });
     </script>
 </head>

@@ -116,16 +116,16 @@
             .replace( />/g, '&gt;' ).replace( /"/g, '&quot;' );
     }
 
-    // Gaps in the shared eqneditor.css (loaded separately, asynchronously, from the host
+    // Gaps in the shared fxeditor.css (loaded separately, asynchronously, from the host
     // configured below) this dialog needs but can't assume it will get:
     //  - editor.codecogs.com, the old default host and still configurable, serves an older stylesheet that
     //    predates the CCEqnEditor/CCMathViewHost/CCLatexInput class names entirely (only a
     //    local dev mirror does not have this gap), so the LaTeX/maths mutual-exclusion and the
-    //    layout below are written defensively rather than left to eqneditor.css;
+    //    layout below are written defensively rather than left to fxeditor.css;
     //  - this dialog has no rendered-equation preview and no LaTeX box visible by default (see
     //    panelHtml()), so the maths view needs to fill the space between the toolbar and the
     //    bottom bar itself, which nothing outside this plugin has an opinion on.
-    // Injected once, since it would otherwise race eqneditor.css over which rule wins.
+    // Injected once, since it would otherwise race fxeditor.css over which rule wins.
     // The API's own injected @font-face for "Latin Modern Math" (the face MathView and every
     // rendered equation use) only carries local("Latin Modern Math") - no url() fallback - so
     // it silently falls back to whatever generic serif the visitor's OS has unless that exact
@@ -339,9 +339,9 @@
         var design = editor.getParam( 'eqneditor_design', {} ) || {};
 
         var scriptUrl = editor.getParam(
-            'eqneditor_script_url', origin + '/eqneditor.api.min.js' );
+            'eqneditor_script_url', origin + '/fxeditor.api.min.js' );
         var cssUrl = editor.getParam(
-            'eqneditor_css_url', origin + '/eqneditor.css' );
+            'eqneditor_css_url', origin + '/fxeditor.css' );
         var mathmlCssUrl = editor.getParam(
             'eqneditor_mathml_css_url', origin + '/fxtex.css' );
 

@@ -1,5 +1,5 @@
 {
-  "name": "@codecogs/eqneditor-tinymce6",
+  "name": "@codecogs/fxeditor-tinymce",
   "version": "2.1.0",
   "description": "CodeCogs Equation Editor plugin for TinyMCE 6 and 7",
   "keywords": [

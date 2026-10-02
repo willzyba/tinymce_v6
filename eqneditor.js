@@ -12,7 +12,7 @@
  *       toolbar: 'eqneditor',
  *
  *       // Optional:
- *       eqneditor_server: 'editor.codecogs.com',    // where the editor's own code is served from
+ *       eqneditor_server: 'fxeditor.codecogs.com',    // where the editor's own code is served from
  *       eqneditor_render_url: 'https://latex.codecogs.com'   // where SVG equations are rendered
  *   });
  *
@@ -37,7 +37,7 @@
         'mtable', 'mtr', 'mtd', 'mlabeledtr', 'maction'
     ];
 
-    var DEFAULT_EDITOR_HOST = 'editor.codecogs.com';
+    var DEFAULT_EDITOR_HOST = 'fxeditor.codecogs.com';
     var DEFAULT_RENDER_URL = 'https://latex.codecogs.com';
 
     // One shared download per URL, however many TinyMCE instances a page has.
@@ -118,7 +118,7 @@
 
     // Gaps in the shared eqneditor.css (loaded separately, asynchronously, from the host
     // configured below) this dialog needs but can't assume it will get:
-    //  - editor.codecogs.com, the default host, currently serves an older stylesheet that
+    //  - editor.codecogs.com, the old default host and still configurable, serves an older stylesheet that
     //    predates the CCEqnEditor/CCMathViewHost/CCLatexInput class names entirely (only a
     //    local dev mirror does not have this gap), so the LaTeX/maths mutual-exclusion and the
     //    layout below are written defensively rather than left to eqneditor.css;
@@ -204,6 +204,41 @@
     }
 
     // Re-asserts the API's own .CCMathView/.fxtex rules, which host resets and revert-layer override.
+    // The `design` option (see the README): how the editor looks, set by the site rather than the
+    // author. The toolbar's rows and scale go to Toolbar.link() itself; everything else is applied
+    // here, once the editor is mounted - CSS scoped to this editor's root, then the starting state of
+    // the LaTeX toggle and the "Insert as" menu.
+    var designCount = 0;
+    function applyDesign( root, design, latexToggle, insertSelect ) {
+        if ( !root || !design ) return;
+        if ( !root.id ) root.id = 'cc-eqn-design-' + ( ++designCount );
+        var sel = '#' + root.id, css = '';
+        var colour = String( design.colour || '' );
+        if ( /^(#[0-9a-f]{3,8}|[a-z]+)$/i.test( colour ) ) {
+            css += sel + ' { --cc-accent: ' + colour + ';' +
+                ' --cc-accent-soft: color-mix(in srgb, ' + colour + ' 11%, #fff);' +
+                ' --cc-accent-soft-ring: color-mix(in srgb, ' + colour + ' 28%, #fff);' +
+                ' --cc-accent-mid: color-mix(in srgb, ' + colour + ' 22%, #fff);' +
+                ' --cc-accent-mid-ring: color-mix(in srgb, ' + colour + ' 43%, #fff); }';
+        }
+        if ( Number( design.mathSize ) > 0 ) css += sel + ' .CCMathView { font-size: ' + Number( design.mathSize ) + 'px !important; }';
+        if ( Number( design.latexSize ) > 0 ) css += sel + ' .CCLatexInput { font-size: ' + Number( design.latexSize ) + 'px !important; }';
+        if ( design.toolbar === false ) css += sel + ' .CCToolbar { display: none !important; }';
+        if ( design.history === false ) css += sel + ' .CCEditorBar { display: none !important; }';
+        if ( css ) {
+            var style = document.createElement( 'style' );
+            style.textContent = css;
+            root.appendChild( style );
+        }
+        if ( insertSelect && design.insertAs && insertSelect.querySelector( 'option[value="' + design.insertAs + '"]' ) ) {
+            insertSelect.value = design.insertAs;
+        }
+        if ( latexToggle && design.latex && !latexToggle.checked && !latexToggle.disabled ) {
+            latexToggle.checked = true;
+            latexToggle.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+        }
+    }
+
     function apiMathRules() {
         var out = '';
         for ( var i = 0; i < document.styleSheets.length; i++ ) {
@@ -251,6 +286,7 @@
         var origin = /^https?:\/\//.test( host ) ? host.replace( /\/+$/, '' ) : 'https://' + host;
         var renderUrl = editor.getParam( 'eqneditor_render_url', DEFAULT_RENDER_URL );
         var licence = editor.getParam( 'eqneditor_licence', '' );
+        var design = editor.getParam( 'eqneditor_design', {} ) || {};
 
         var scriptUrl = editor.getParam(
             'eqneditor_script_url', origin + '/eqneditor.api.min.js' );
@@ -319,7 +355,7 @@
                 .addOutput( eqOutput )
                 .addHistoryMenu( new EqEditor.History( ids.history ) );
 
-            eqToolbar = EqEditor.Toolbar.link( ids.toolbar ).addTextArea( eqTextArea );
+            eqToolbar = EqEditor.Toolbar.link( ids.toolbar, design.toolbar || 'default', design.toolbarScale || 1 ).addTextArea( eqTextArea );
 
             // MathView arrived in the 5.x API. Guard rather than require it, so a site pinned
             // to an older bundle still gets the markup editor instead of a broken dialog.
@@ -357,6 +393,9 @@
                 if ( eqMathView ) eqMathView.setInline( inline );
                 eqOutput.setInline( inline );
             } );
+
+            applyDesign( document.getElementById( ids.root ), design,
+                document.getElementById( ids.toggleLatex ), document.getElementById( ids.insertMode ) );
         }
 
         /**

@@ -155,15 +155,10 @@
             '.CCEqnEditor { display: flex !important; flex-direction: column !important; ' +
                 'height: 520px !important; }' +
             '.CCEqnEditor .CCEditorBar, .CCEqnEditor .CCToolbarHost { flex: 0 0 auto; }' +
-            // flex:0 0 auto only fixes the MAIN axis (height, in a column flex container) -
-            // the CROSS axis (width) still defaults to align-items:stretch, so the toolbar host
-            // was filling the full 850px dialog width. The toolbar's own "fit" pass then
-            // unwrapped every button group to use all of that width instead of wrapping tight
-            // like the reference page (never stretched, ~780px natural width) does - same
-            // icons, spread thinner across a wider, emptier row. flex-start plus width:auto
-            // (both needed - a flex-start item with no width of its own still stretches
-            // otherwise) leaves it free to size to its own fitted content instead.
-            '.CCEqnEditor .CCToolbarHost { align-self: flex-start; width: auto; }' +
+            // The toolbar host as wide as the dialog, no wider: sized to its own content instead
+            // (width: auto) it kept the toolbar's whole row and ran past a narrow dialog
+            // (`design.width`); at 100% the toolbar scrolls.
+            '.CCEqnEditor .CCToolbarHost { align-self: flex-start; width: 100%; }' +
             '.CCEqnEditor .CCMathViewHost { ' +
                 'flex: 1 1 auto; min-height: 0; display: flex; align-items: center; ' +
                 'justify-content: center; overflow: auto; }' +
@@ -173,7 +168,7 @@
             '.CCEqnEditor[data-latex="off"] .CCLatexInput { display: none !important; }' +
             '.CCEqnEditor .CCEqnOutput-hidden { display: none !important; }' +
             // The bottom bar: toggles left, Insert-as and the dialog's buttons right, one type size. All !important - host dialog resets otherwise restyle it.
-            '.cc-eqn-bar { display: flex !important; align-items: center !important; gap: 16px !important; flex: 0 0 auto !important; ' +
+            '.cc-eqn-bar { display: flex !important; flex-wrap: wrap !important; align-items: center !important; gap: 16px !important; flex: 0 0 auto !important; ' +
                 'margin: 8px 0 0 !important; padding: 10px 0 0 !important; border: 0 !important; border-top: 1px solid #e2e8f0 !important; ' +
                 'background: none !important; font: 13px/1.3 system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important; color: #1c2530 !important; }' +
             '.cc-eqn-bar-right { display: flex !important; align-items: center !important; gap: 8px !important; margin: 0 0 0 auto !important; padding: 0 !important; font: inherit !important; color: inherit !important; }' +
@@ -301,12 +296,12 @@
             try { rules = document.styleSheets[ i ].cssRules; } catch ( e ) { continue; }
             for ( var j = 0; j < rules.length; j++ ) {
                 var r = rules[ j ], decls = '';
-                if ( !r.selectorText || !/(^|,)\s*\.(fxtex|CCMathView)\b/.test( r.selectorText ) ) continue;
+                if ( !r.selectorText || !/(^|,)\s*(:where\(\.fxEditor\)\s*)?\.(fxtex|CCMathView)\b/.test( r.selectorText ) ) continue;
                 for ( var k = 0; k < r.style.length; k++ ) {
                     decls += r.style[ k ] + ':' + r.style.getPropertyValue( r.style[ k ] ) + ' !important;';
                 }
                 if ( decls ) {
-                    out += r.selectorText.split( ',' ).map( function ( s ) {
+                    out += r.selectorText.replace( /:where\(\.fxEditor\)\s*/g, '' ).split( ',' ).map( function ( s ) {
                         s = s.trim();
                         return /^\.CCMathView\b/.test( s ) ? s : '.CCMathView ' + s;
                     } ).join( ',' ) + '{' + decls + '}';
@@ -392,8 +387,8 @@
                         '</label>' +
                         '<div class="cc-eqn-bar-right">' +
                             '<select class="cc-eqn-select" id="' + ids.insertMode + '" title="How to insert the equation">' +
-                                '<option value="mathml" selected>Insert as MathML</option>' +
-                                '<option value="svg">Insert as image (SVG)</option>' +
+                                '<option value="mathml" selected>Insert MathML</option>' +
+                                '<option value="svg">Insert SVG</option>' +
                             '</select>' +
                             '<button type="button" class="cc-eqn-btn cc-cancel">Cancel</button>' +
                             '<button type="button" class="cc-eqn-btn cc-eqn-primary cc-ok">OK</button>' +

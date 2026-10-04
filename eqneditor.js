@@ -151,7 +151,7 @@
                 'width: revert-layer !important; height: revert-layer !important; padding: revert-layer !important; ' +
                 'margin: revert-layer !important; text-transform: revert-layer !important; text-align: revert-layer !important; ' +
                 'box-sizing: revert-layer !important; white-space: revert-layer !important; }' +
-            apiMathRules() +
+            apiMathRules() + apiCaretRules() +
             '.CCEqnEditor { display: flex !important; flex-direction: column !important; ' +
                 'height: 520px !important; }' +
             '.CCEqnEditor .CCEditorBar, .CCEqnEditor .CCToolbarHost { flex: 0 0 auto; }' +
@@ -331,6 +331,26 @@
         }
     }
 
+    // Ready to type into, with its cursor showing: the MathView (or the LaTeX pane, when that is the
+    // one showing) takes focus as the dialog opens - otherwise focus stays on whatever opened it.
+    // The API draws the MathView's caret where the cursor is at that moment and only redraws it on an
+    // edit or on focus, but a dialog goes on settling after it opens (fonts arrive, the toolbar fits
+    // itself to its row) and moves the equation out from under it. Its focus handler only redraws
+    // (the cursor stays where it is), so it is fired again whenever the editing area changes size.
+    function focusEditor( root ) {
+        if ( !root ) return;
+        var pane = root.querySelector( root.getAttribute( 'data-latex' ) === 'on' ? '.CCLatexInput' : '.CCMathView' );
+        if ( pane ) pane.focus( { preventScroll: true } );
+        var view = root.querySelector( '.CCMathView' ), host = view && view.parentElement;
+        if ( host && !host.ccCaretWatch && typeof ResizeObserver !== 'undefined' ) {
+            host.ccCaretWatch = new ResizeObserver( function () {
+                var mv = host.querySelector( '.CCMathView' );
+                if ( mv && document.activeElement === mv ) mv.dispatchEvent( new FocusEvent( 'focus' ) );
+            } );
+            host.ccCaretWatch.observe( host );
+        }
+    }
+
     function apiMathRules() {
         var out = '';
         for ( var i = 0; i < document.styleSheets.length; i++ ) {
@@ -348,6 +368,28 @@
                         return /^\.CCMathView\b/.test( s ) ? s : '.CCMathView ' + s;
                     } ).join( ',' ) + '{' + decls + '}';
                 }
+            }
+        }
+        return out;
+    }
+
+    // The same for the MathView's drawn caret and the area it is positioned in: TinyMCE's skin
+    // (.tox :not(svg):not(rect) - position: static; width: auto; background) outranks the API's
+    // own rules, and left alone the caret had no size, colour or place - no cursor at all. Every
+    // declaration but display, which the API sets on the element itself to show and hide it.
+    function apiCaretRules() {
+        var out = '';
+        for ( var i = 0; i < document.styleSheets.length; i++ ) {
+            var rules;
+            try { rules = document.styleSheets[ i ].cssRules; } catch ( e ) { continue; }
+            for ( var j = 0; j < rules.length; j++ ) {
+                var r = rules[ j ], decls = '';
+                if ( !r.selectorText || !/\.CCMathView(Caret|Wrap)\b/.test( r.selectorText ) ) continue;
+                for ( var k = 0; k < r.style.length; k++ ) {
+                    if ( r.style[ k ] === 'display' ) continue;
+                    decls += r.style[ k ] + ':' + r.style.getPropertyValue( r.style[ k ] ) + ' !important;';
+                }
+                if ( decls ) out += r.selectorText.replace( /:where\(\.fxEditor\)\s*/g, '' ) + '{' + decls + '}';
             }
         }
         return out;
@@ -576,6 +618,7 @@
                     eqTextArea.insert( latex, latex.length );
                 }
                 eqTextArea.notifyOutputs();
+                focusEditor( document.getElementById( ids.root ) );
 
                 document.getElementById( ids.root ).querySelector( '.cc-cancel' )
                     .addEventListener( 'click', function () { dialog.close(); } );

@@ -1,8 +1,9 @@
 {
   "name": "@codecogs/fxeditor-tinymce",
   "version": "2.1.0",
-  "description": "CodeCogs Equation Editor plugin for TinyMCE 6 and 7",
+  "description": "fxEditor, CodeCogs' LaTeX equation editor, as a plugin for TinyMCE 6 and 7",
   "keywords": [
+    "fxeditor",
     "tinymce",
     "tinymce-plugin",
     "equation",
@@ -11,7 +12,8 @@
     "mathml",
     "maths"
   ],
-  "homepage": "https://editor.codecogs.com/docs/3-Tiny_MCE_v6.php",
+  "homepage": "https://fxplugins.codecogs.com/docs/tinymce.html",
+  "author": "CodeCogs",
   "main": "eqneditor.js",
   "files": [
     "eqneditor.js",
@@ -20,7 +22,6 @@
   "scripts": {
     "start": "open-cli ./example.html"
   },
-  "author": "CodeCogs",
   "license": "MIT",
   "peerDependencies": {
     "tinymce": ">=6.0.0"

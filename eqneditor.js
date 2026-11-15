@@ -13,7 +13,7 @@
  *
  *       // Optional:
  *       eqneditor_server: 'fxtex.codecogs.com',    // where the editor's own code is served from
- *       eqneditor_render_url: 'https://latex.codecogs.com'   // where SVG equations are rendered
+ *       eqneditor_render_url: 'https://fxtex.codecogs.com'   // where SVG equations are rendered
  *   });
  *
  * The dialog is maths-view only: no LaTeX markup and no rendered-equation preview are visible
@@ -38,7 +38,7 @@
     ];
 
     var DEFAULT_EDITOR_HOST = 'fxtex.codecogs.com';
-    var DEFAULT_RENDER_URL = 'https://latex.codecogs.com';
+    var DEFAULT_RENDER_URL = 'https://fxtex.codecogs.com';
 
     // One shared download per URL, however many TinyMCE instances a page has.
     var scriptPromises = {};
@@ -979,7 +979,7 @@
             if ( mode === 'svg' ) {
                 var latex = eqTextArea.getTextArea().textContent.trim();
                 // referrerpolicy="origin" rather than leaving it to the page's own
-                // Referrer-Policy: latex.codecogs.com identifies the calling site by referer,
+                // Referrer-Policy: the rendering service identifies the calling site by referer,
                 // and a page with a stricter policy (or none at all, on some browsers'
                 // defaults) would otherwise send none at all.
                 return '<img class="fxtex" src="' + escapeHtml( outputCode( eqOutput, 'url' ) ) + '" ' +
@@ -1101,7 +1101,7 @@
 
             // img's default schema rule doesn't include referrerpolicy - without registering
             // it, TinyMCE's content sanitiser silently strips it from every inserted equation
-            // image, and latex.codecogs.com stops being able to identify the referring site.
+            // image, and the rendering service stops being able to identify the referring site.
             //
             // schema.addValidElements('img[referrerpolicy]') looks like the right call, but for
             // an element the schema already has a rule for, it *replaces* that rule rather than

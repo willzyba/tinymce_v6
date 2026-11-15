@@ -13,7 +13,7 @@
     "maths"
   ],
   "homepage": "https://fxplugins.codecogs.com/docs/tinymce.html",
-  "author": "CodeCogs",
+  "author": "CodeCogs, Zyba Ltd.",
   "main": "eqneditor.js",
   "files": [
     "eqneditor.js",

@@ -50,7 +50,7 @@ Copy `eqneditor.js` to your site - it is the only file you need. Load it after T
     plugins: 'eqneditor',
     toolbar: 'undo redo | bold italic | eqneditor',
     eqneditor_server: 'fxtex.codecogs.com',
-    eqneditor_licence: 'your-licence-key',      // from the licence manager - see below
+    eqneditor_licence: 'your-licence-key',      // from fxeditor.codecogs.com/purchase - see below
     eqneditor_design: { colour: '#0f7a4d' }     // optional
   });
 </script>
@@ -95,12 +95,7 @@ TinyMCE (6 or later) is a peer dependency: install it yourself.
 Equations are rendered by fxTeX Pro, which needs a licence key for your domain. Without one,
 equations show the reason they cannot render in place of the maths.
 
-- Get a key at [fxeditor.codecogs.com/purchase](https://fxeditor.codecogs.com/purchase) - paid
-  plans, and a free trial.
-- Teachers and students can have a free individual licence:
-  [fxeditor.codecogs.com/academic](https://fxeditor.codecogs.com/academic).
-- Keys are managed in the [licence manager](https://fxeditor.codecogs.com/login): add the domains
-  your site runs on, and copy the key from there.
+Get your licence key from [fxeditor.codecogs.com/purchase](https://fxeditor.codecogs.com/purchase).
 
 The key goes in the `eqneditor_licence` option of `tinymce.init()`. The full set of options:
 
@@ -119,7 +114,10 @@ author chooses MathML or an image in the dialog, and shows or hides the LaTeX wi
 
 ## Licence
 
-The plugin (`eqneditor.js`) is MIT licensed, as declared in `package.json`.
+Copyright (c) 2026 CodeCogs, Zyba Ltd.
+
+The plugin (`eqneditor.js`) and the rest of this repository's own code are released under the
+MIT licence - see [`LICENSE`](https://github.com/willzyba/tinymce_v6/blob/main/LICENSE).
 
 TinyMCE is licensed separately by Tiny Technologies, Inc. The copy in `vendor/` (TinyMCE 7.9.3)
 is under the GNU General Public License, version 2 or later - see

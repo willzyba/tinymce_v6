@@ -12,7 +12,7 @@
  *       toolbar: 'eqneditor',
  *
  *       // Optional:
- *       eqneditor_server: 'fxtex.codecogs.com',    // where the editor's own code is served from
+ *       eqneditor_server: 'https://fxtex.codecogs.com',    // where the editor's own code is served from
  *       eqneditor_render_url: 'https://fxtex.codecogs.com'   // where SVG equations are rendered
  *   });
  *
@@ -37,7 +37,7 @@
         'mtable', 'mtr', 'mtd', 'mlabeledtr', 'maction'
     ];
 
-    var DEFAULT_EDITOR_HOST = 'fxtex.codecogs.com';
+    var DEFAULT_EDITOR_HOST = 'https://fxtex.codecogs.com';
     var DEFAULT_RENDER_URL = 'https://fxtex.codecogs.com';
 
     // One shared download per URL, however many TinyMCE instances a page has.

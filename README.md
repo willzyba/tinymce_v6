@@ -51,7 +51,7 @@ Copy `eqneditor.js` to your site - it is the only file you need. Load it after T
     selector: '#mytextarea',
     plugins: 'eqneditor',
     toolbar: 'undo redo | bold italic | eqneditor',
-    eqneditor_server: 'fxtex.codecogs.com',
+    eqneditor_server: 'https://fxtex.codecogs.com',
     eqneditor_licence: 'your-licence-key',      // from fxeditor.codecogs.com/purchase - see below
     eqneditor_design: { colour: '#0f7a4d' }     // optional
   });
@@ -69,7 +69,7 @@ for you; on the page that finally shows your content, add:
 ```
 
 To try the plugin straight from the clone, open `example.html`. It loads the copy of TinyMCE in
-`vendor/`. Replace `{{EQN_SERVER}}` in it with `fxtex.codecogs.com` and `{{FXTEXPRO_KEY}}` with
+`vendor/`. Replace `{{EQN_SERVER}}` in it with `https://fxtex.codecogs.com` and `{{FXTEXPRO_KEY}}` with
 your licence key.
 
 Using Angular? See [fxplugins.codecogs.com/docs/angular.html](https://fxplugins.codecogs.com/docs/angular.html).
@@ -105,7 +105,7 @@ The key goes in the `eqneditor_licence` option of `tinymce.init()`. The full set
 |---|---|---|
 | `eqneditor_licence` | | Your fxEditor licence key. Required. |
 | `eqneditor_design` | | The editor's look: dialog width, height and scale, toolbar panels and size, colour, equation and markup sizes, undo/redo, how the dialog opens. Build one in [Customise and download](https://fxplugins.codecogs.com/docs/tinymce.html#customise). |
-| `eqneditor_server` | `'fxtex.codecogs.com'` | Host the equation editor's own code is loaded from. A bare host means https; a full origin is used as it is. |
+| `eqneditor_server` | `'https://fxtex.codecogs.com'` | Where the equation editor's own code is loaded from, as a URL (a bare host is taken as https). |
 | `eqneditor_render_url` | `'https://fxtex.codecogs.com'` | The rendering service for equations inserted as images. Point it at a self-hosted fxTeX Server to keep equations inside your network. |
 | `eqneditor_script_url` | from server | Full URL of the equation editor bundle. |
 | `eqneditor_css_url` | from server | Full URL of the equation editor stylesheet. |

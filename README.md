@@ -58,7 +58,7 @@ Copy `eqneditor.js` to your site - it is the only file you need. Load it after T
 </script>
 ```
 
-The equation editor itself is fetched from `fxtex.codecogs.com` the first time it is needed. The
+The equation editor itself is fetched from `https://fxtex.codecogs.com` the first time it is needed. The
 plugin teaches TinyMCE to keep MathML, so there is no `valid_elements` list to maintain.
 
 MathML needs a stylesheet on the page that displays it. The plugin loads it into the editing view

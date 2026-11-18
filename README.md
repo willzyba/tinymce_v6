@@ -61,12 +61,15 @@ Copy `eqneditor.js` to your site - it is the only file you need. Load it after T
 The equation editor itself is fetched from `https://fxtex.codecogs.com` the first time it is needed. The
 plugin teaches TinyMCE to keep MathML, so there is no `valid_elements` list to maintain.
 
-MathML needs a stylesheet on the page that displays it. The plugin loads it into the editing view
-for you; on the page that finally shows your content, add:
+MathML needs a stylesheet on the page that displays it. The plugin loads it into TinyMCE's editing
+area for you; on the page that finally shows your content, add:
 
 ```html
-<link rel="stylesheet" href="https://fxtex.codecogs.com/fxtex.css">
+<link id="fxtex-style" rel="stylesheet" href="https://fxtex.codecogs.com/fxtex.css">
 ```
+
+The `id` is the one fxTeX Pro looks for: on a page that also runs the editor, fxTeX Pro sees
+the rules are already there and does not add a second copy.
 
 To try the plugin straight from the clone, open `example.html`. It loads the copy of TinyMCE in
 `vendor/`. Replace `{{EQN_SERVER}}` in it with `https://fxtex.codecogs.com` and `{{FXTEXPRO_KEY}}` with
@@ -109,7 +112,7 @@ The key goes in the `eqneditor_licence` option of `tinymce.init()`. The full set
 | `eqneditor_render_url` | `'https://fxtex.codecogs.com'` | The rendering service for equations inserted as images. Point it at a self-hosted fxTeX Server to keep equations inside your network. |
 | `eqneditor_script_url` | from server | Full URL of the equation editor bundle. |
 | `eqneditor_css_url` | from server | Full URL of the equation editor stylesheet. |
-| `eqneditor_mathml_css_url` | from server | The MathML stylesheet loaded into the editing view. |
+| `eqneditor_mathml_css_url` | from server | The MathML stylesheet (`fxtex.css`) loaded into the editing area's iframe. The page around it is not given a copy: fxTeX Pro adds its own when the dialog opens. With `inline: true` it is loaded into the page instead, under the id fxTeX Pro looks for. |
 
 `eqneditor_insert_as` and `eqneditor_show_latex`, from earlier versions, are no longer read: the
 author chooses MathML or an image in the dialog, and shows or hides the LaTeX with its toggle.

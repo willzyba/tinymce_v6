@@ -1124,6 +1124,13 @@
             // The wrapper the converter puts the spoken text on.
             editor.schema.addValidElements( 'span[class|role|aria-label|aria-hidden]' );
 
+            // TinyMCE does not count <math> as content, so a paragraph holding nothing but an
+            // equation - which is how a display equation is inserted - was judged empty and cleared
+            // when the content was serialised: the editor still showed the equation, but
+            // getContent(), and so whatever the page saved, had an empty paragraph in its place.
+            var nonEmpty = editor.schema.getNonEmptyElements();
+            nonEmpty.math = nonEmpty.MATH = {};
+
             // img's default schema rule doesn't include referrerpolicy - without registering
             // it, TinyMCE's content sanitiser silently strips it from every inserted equation
             // image, and the rendering service stops being able to identify the referring site.
